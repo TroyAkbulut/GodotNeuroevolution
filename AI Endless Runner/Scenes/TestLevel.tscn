@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://b5p84flgg07ej"]
+
+[ext_resource type="PackedScene" uid="uid://bjk1nx8xn4l3h" path="res://PlatformSpawner/PlatformManager.tscn" id="1_1vs6u"]
+[ext_resource type="Script" path="res://Scripts/Level.gd" id="1_yh5ab"]
+[ext_resource type="Script" path="res://Scripts/PlatformTester.gd" id="3_72rmr"]
+[ext_resource type="Script" path="res://Scripts/PlayerTester.gd" id="4_kknn2"]
+[ext_resource type="Script" path="res://Scripts/PlayerManager.gd" id="5_vey1g"]
+[ext_resource type="Script" path="res://Scripts/TestManager.gd" id="6_4nm4v"]
+
+[node name="TestLevel" type="Node2D"]
+script = ExtResource("1_yh5ab")
+levelID = 2
+
+[node name="PlatformManager" parent="." instance=ExtResource("1_1vs6u")]
+
+[node name="PlatformTester" type="Node" parent="." node_paths=PackedStringArray("platformManager")]
+script = ExtResource("3_72rmr")
+platformManager = NodePath("../PlatformManager")
+
+[node name="PlayerManager" type="Node2D" parent="." node_paths=PackedStringArray("platformManager")]
+script = ExtResource("5_vey1g")
+playerScenePath = "res://Scenes/Player.tscn"
+platformManager = NodePath("../PlatformManager")
+maxX = 300
+maxY = 300
+minX = -300
+minY = -300
+
+[node name="PlayerTester" type="Node" parent="." node_paths=PackedStringArray("playerManager")]
+script = ExtResource("4_kknn2")
+playerManager = NodePath("../PlayerManager")
+
+[node name="TestManager" type="Node" parent="." node_paths=PackedStringArray("platformTester", "playerTester")]
+script = ExtResource("6_4nm4v")
+platformTester = NodePath("../PlatformTester")
+playerTester = NodePath("../PlayerTester")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.2, 1.2)

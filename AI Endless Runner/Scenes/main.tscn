@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://dapyb0gurdjch"]
+
+[ext_resource type="Script" path="res://Scripts/Main.gd" id="1_u07qf"]
+[ext_resource type="Script" path="res://Scripts/LevelData.gd" id="2_tuywy"]
+
+[sub_resource type="Resource" id="Resource_y1sru"]
+script = ExtResource("2_tuywy")
+levelID = 1
+levelName = "MainLevel"
+path = "res://Scenes/MainLevel.tscn"
+
+[sub_resource type="Resource" id="Resource_qh00r"]
+script = ExtResource("2_tuywy")
+levelID = 2
+levelName = "TestLevel"
+path = "res://Scenes/TestLevel.tscn"
+
+[node name="Main" type="Node"]
+script = ExtResource("1_u07qf")
+levels = Array[ExtResource("2_tuywy")]([SubResource("Resource_y1sru"), SubResource("Resource_qh00r")])
+
+[node name="MainScene" type="Node2D" parent="."]

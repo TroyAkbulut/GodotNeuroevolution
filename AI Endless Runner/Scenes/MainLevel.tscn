@@ -1,0 +1,95 @@
+[gd_scene load_steps=14 format=3 uid="uid://b6bitkcpwkjcw"]
+
+[ext_resource type="Script" path="res://Scripts/Level.gd" id="1_kb7m2"]
+[ext_resource type="PackedScene" uid="uid://bjk1nx8xn4l3h" path="res://PlatformSpawner/PlatformManager.tscn" id="3_w26y3"]
+[ext_resource type="Script" path="res://Scripts/SpeedLabel.gd" id="4_1m5kh"]
+[ext_resource type="Script" path="res://Scripts/FPSLabel.gd" id="4_lpdyh"]
+[ext_resource type="PackedScene" uid="uid://bu03qyadswfi3" path="res://DeathZone/DeathZone.tscn" id="5_amnve"]
+[ext_resource type="Script" path="res://Scripts/UDPManager.gd" id="6_ju17h"]
+[ext_resource type="Script" path="res://Scripts/PlayerManager.gd" id="7_gycav"]
+[ext_resource type="TileSet" uid="uid://ocxeavhrrdjo" path="res://Assets/BaseTileSet.tres" id="8_dxm02"]
+[ext_resource type="Script" path="res://Scenes/Timer.gd" id="9_ue638"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_evoxr"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_1lgjy"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_ng24n"]
+normal = Vector2(0, 1)
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wkc1m"]
+
+[node name="MainLevel" type="Node2D"]
+script = ExtResource("1_kb7m2")
+levelID = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.2, 1.2)
+
+[node name="UDPManager" type="Node" parent="." node_paths=PackedStringArray("platformManager", "playerManager")]
+script = ExtResource("6_ju17h")
+platformManager = NodePath("../PlatformManager")
+playerManager = NodePath("../PlayerManager")
+
+[node name="PlayerManager" type="Node2D" parent="." node_paths=PackedStringArray("platformManager")]
+script = ExtResource("7_gycav")
+playerScenePath = "res://Scenes/Player.tscn"
+platformManager = NodePath("../PlatformManager")
+maxX = 334
+maxY = -175
+minX = -334
+minY = 175
+
+[node name="PlatformManager" parent="." instance=ExtResource("3_w26y3")]
+
+[node name="SpeedLabel" type="Label" parent="." node_paths=PackedStringArray("platformManager")]
+offset_left = 404.0
+offset_top = -257.0
+offset_right = 467.0
+offset_bottom = -234.0
+script = ExtResource("4_1m5kh")
+platformManager = NodePath("../PlatformManager")
+
+[node name="FPSLabel" type="Label" parent="."]
+offset_left = 412.0
+offset_top = -230.0
+offset_right = 475.0
+offset_bottom = -207.0
+script = ExtResource("4_lpdyh")
+
+[node name="DeathZone" parent="." instance=ExtResource("5_amnve")]
+position = Vector2(0, 1)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
+position = Vector2(0, 175)
+shape = SubResource("WorldBoundaryShape2D_evoxr")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="DeathZone"]
+position = Vector2(-334, 0)
+rotation = -4.71239
+shape = SubResource("WorldBoundaryShape2D_1lgjy")
+
+[node name="Border" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Border"]
+position = Vector2(0, -175)
+shape = SubResource("WorldBoundaryShape2D_ng24n")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Border"]
+position = Vector2(334, 0)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_wkc1m")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource("8_dxm02")
+format = 2
+layer_0/tile_data = PackedInt32Array(-720897, 0, 0, -22, 0, 0, 720896, 0, 0, -65515, 0, 0)
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+script = ExtResource("9_ue638")
+
+[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
